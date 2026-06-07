@@ -31,7 +31,7 @@ jobs:
         node-version: '20'
     
     - name: Run OpenCode
-      uses: anomalyco/opencode/github@main
+      uses: anomalyco/opencode/github@latest
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
