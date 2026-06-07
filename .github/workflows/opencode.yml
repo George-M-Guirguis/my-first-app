@@ -9,24 +9,31 @@ on:
 jobs:
   opencode:
     if: |
-      contains(github.event.comment.body, '/oc') ||
-      contains(github.event.comment.body, '/opencode')
+      github.event_name == 'issue_comment' && 
+      (contains(github.event.comment.body, '/oc') || 
+       contains(github.event.comment.body, '/opencode'))
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
       contents: write
       issues: write
       pull-requests: write
+      actions: read
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        fetch-depth: 1
-        persist-credentials: false
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
     
     - name: Run OpenCode
-      uses: anomalyco/opencode/github@latest
+      uses: anomalyco/opencode/github@main
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
       with:
         model: ollama/gemma4:31b-cloud
